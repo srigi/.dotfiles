@@ -10,6 +10,7 @@ SAYINGS=(
     "Good morning! And in case I don't see ya, good afternoon, good evening and goodnight.\n  --Truman Burbank"
 )
 
+
 # Print a randomly-chosen message:
 echo $SAYINGS[$(($RANDOM % ${#SAYINGS} + 1))]
 

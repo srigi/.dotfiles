@@ -5,38 +5,37 @@
 #
 # Browser
 #
-
 if [[ "$OSTYPE" == darwin* ]]; then
   export BROWSER='open'
 fi
 
+
 #
 # Editors
 #
-
 export EDITOR='vim'
 export VISUAL='vim'
 export PAGER='less'
 
+
 #
 # Language
 #
-
 if [[ -z "$LANG" ]]; then
   export LANG='en_US.UTF-8'
 fi
 
+
 #
 # Paths
 #
-
 # Ensure path arrays do not contain duplicates.
 typeset -gU cdpath fpath mailpath path
 
 # Set the list of directories that cd searches.
-# cdpath=(
-#   $cdpath
-# )
+#cdpath=(
+#  $cdpath
+#)
 
 # Set the list of directories that Zsh searches for programs.
 path=(
@@ -45,10 +44,10 @@ path=(
   $path
 )
 
+
 #
 # Less
 #
-
 # Set the default Less options.
 # Mouse-wheel scrolling has been disabled by -X (disable screen clearing).
 # Remove -X to enable it.
@@ -61,10 +60,14 @@ if (( $#commands[(i)lesspipe(|.sh)] )); then
 fi
 
 
+# Customize to your needs...
+
+# Shell function to generate random string with given length (default 16chars)
 function randstr() {
   cat /dev/random | gtr -dc 'a-zA-Z0-9!@#$%^&*()-_=+[{}];:\|`~,<>./?' | fold -w ${1:-16} | head -n 1
 }
 
+# Shell function to list current dir via tree. Provide `depth` as argument (default 1)
 function t() {
   ignore='"node_modules|.git"'
   cmd="tree -a -C --dirsfirst -I $ignore"

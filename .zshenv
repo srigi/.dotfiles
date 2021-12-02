@@ -7,6 +7,9 @@ if [[ ( "$SHLVL" -eq 1 && ! -o LOGIN ) && -s "${ZDOTDIR:-$HOME}/.zprofile" ]]; t
   source "${ZDOTDIR:-$HOME}/.zprofile"
 fi
 
+
+# Customize to your needs...
+
 export HISTCONTROL=ignoredups
 export HISTDUP=erase
 export HISTSIZE=50000
