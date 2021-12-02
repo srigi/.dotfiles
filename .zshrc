@@ -2,10 +2,19 @@
 # Executes commands at the start of an interactive session.
 #
 
+# Load Powerlevel10k prompt cache
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 # Source Prezto
 if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
+
+# Source Powerlevel10k instant prompt
+#  run `p10k configure` or edit ~/.p10k.zsh to customize
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 
 # Customize to your needs...
