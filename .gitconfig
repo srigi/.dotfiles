@@ -1,0 +1,104 @@
+[alias]
+	br = branch -vv
+	conflicts = diff --name-only --diff-filter=U
+	s = status -sb
+	st = status
+	optimise = !git prune && git gc --aggressive && git repack -a && git prune-packed
+
+	# checkout
+	co = checkout
+
+	# commit
+	c = commit -m
+	ca = commit -am
+	ci = commit
+	amend = commit --amend
+
+	# diff
+	d = diff
+	dc = diff --cached
+	last = diff HEAD^
+
+	# log
+	changelog = log --pretty=format:' * %s'
+	l = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --abbrev=9
+	ll = !"git l --name-status"
+	lll = !"git l --stat"
+	lme = !"git l --author='srigi'"
+	mystats = log --author='srigi' --pretty=tformat: --numstat | awk '{ add += $1; subs += $2; loc += $1 - $2 } END { printf "added lines: %s, removed lines: %s, total lines: %s\n", add, subs, loc }'
+
+	# rebase
+	rib = rebase -i --autostash
+	rbi = rebase -i --autostash
+	rba = rebase --abort
+	rbc = rebase --continue
+
+	# remote
+	r = remote -v
+
+	# create a new named branch
+	# commit any changes on that branch
+	# swap you back to the branch you started on
+	#  usage: git save foobar
+	save = !sh -c 'export PREV=$(git symbolic-ref HEAD|cut -d/ -f3-) && git checkout -b "$1" && git commit -am "$1" && git checkout "$PREV"' -
+
+	#tags
+	tags = show-ref --tags
+
+[color]
+	ui = true
+
+[color "branch"]
+	current = yellow reverse
+	local = yellow
+	remote = green
+
+[color "diff"]
+	frag = cyan
+	meta = yellow
+	new = blue
+	old = red
+	whitespace = white reverse
+
+[color "status"]
+	added = yellow
+	branch = yellow reverse
+	changed = green
+	untracked = cyan
+
+[core]
+	autocrlf = input
+	editor = vim
+	ignorecase = false
+	pager = `brew --prefix git`/share/git-core/contrib/diff-highlight/diff-highlight | less
+	whitespace = nowarn
+
+[credential]
+	helper = osxkeychain
+
+[diff]
+	# Git diff will use (i)ndex, (w)ork tree, (c)ommit and (o)bject
+	# instead of a/b/c/d as prefixes for patches
+	mnemonicprefix = true
+	compactionHeuristic = on
+	indentHeuristic = on
+
+[http]
+	cookiefile = /Users/srigi/.gitcookies
+
+[init]
+	defaultBranch = main
+
+[mergetool]
+	keepBackup = true
+
+[push]
+	# don't push all local branches, only ones that are already on remote
+	default = tracking
+
+[rerere]
+	enabled = true
+
+[user]
+	email = srigi@srigi.dev
+	name = Srigi
