@@ -29,7 +29,6 @@ fi
 alias cleanup="find $HOME -type f -name '*.DS_Store' -ls -delete"   # recursively delete `.DS_Store` files from $HOME
 alias composer="php -n -dmemory_limit=2560M ~/bin/composer.phar"
 alias dl="cd ~/Downloads"
-alias dotfiles='git --git-dir=$HOME/.dotfiles.git --work-tree=$HOME'
 alias ls='gls -lAFh --color --group-directories-first'
 alias s="subl ."
 #alias sudo='sudo '                          # enable aliases to be sudo’ed

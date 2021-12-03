@@ -28,16 +28,33 @@ ZSH is configured for pleasant usability:
 
 ## Installation
 
-- use 256 color terminal emulator (iTerm2 on macOS)
+Make sure you are using 256 colors terminal emulator ([iTerm2](https://iterm2.com/downloads.html) on macOS is recommended).
+
+- set precedence of `/usr/local/bin` in your `$PATH`:
+    Just put `/usr/local/bin` at the top of the `/etc/paths` file.
+- install GNU tools `brew install coreutils`
 - change your command line interpreter to ZSH: `chsh -s /bin/zsh <username>`
-- clone repository into your home dir.
-- `git submodule init`, then `git submodule update`
-- if you are using Mac OS
-  - run `bin/postinstall`, then restart
-  - `cd .dotfiles/zsh/oh-my-zsh/custom`, then `ln -s ~/.dotfiles/zsh/plugins plugins`
-  - install missing GNU tools `brew install coreutils`
-- restart your terminal app
 
-Also set precedence of `/usr/local/bin` in your `$PATH` (which is always good in Mac OS). Just *sudo* edit `/etc/paths` and put `/usr/local/bin` on top.
+Now, we cannot utilize standardized `git clone`, you already have lots of files/folders in your local $HOME. Git allows clone only into empty folder. Installation of my .dotfiles requires sequence of these steps:
 
-cheers :)
+```bash
+cd ~
+git init
+git config --local status.showUntrackedFiles no
+git remote add origin https://github.com/srigi/.dotfiles.git
+git fetch
+echo 'Next step will overwrite any existing .dotfiles on your system. Continue? [y/n]'
+read INP; [[ ${INP} == 'y' || $INP == 'Y' ]] && (
+  git checkout --force origin/main
+  git switch --create main
+  git submodule update --init --recursive
+)
+```
+
+We create a new git repository at the $HOME. After that we employ the trick from Atlasian article to ignore all existing files. Next we syncronise with this repository manually.
+
+Checkout step can be dangerous! It will overwrite all existing files on your local system that match files in the repository. Warning with confirmation is implemented in the script.
+
+After these steps .dotfiles are laying in the root of the $HOME and are beeing managed with Git. Restart you console session in a new terminal window. Zprezto + powerlevel10k prompt will compile caches and load imediatelly.
+
+Enjoy!
