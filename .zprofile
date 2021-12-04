@@ -82,3 +82,8 @@ function t() {
 
   eval $cmd $@
 }
+
+# Create dir and `cd` into it
+function take() {
+  mkdir -p $@ && cd ${@:$#}
+}

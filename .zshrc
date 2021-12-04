@@ -30,10 +30,13 @@ alias cleanup="find $HOME -type f -name '*.DS_Store' -ls -delete"   # recursivel
 alias composer="php -n -dmemory_limit=2560M ~/bin/composer.phar"
 alias dl="cd ~/Downloads"
 alias ls='gls -lAFh --color --group-directories-first'
+alias md="mkdir -p"
 alias s="subl ."
 #alias sudo='sudo '                          # enable aliases to be sudo’ed
 #alias sudo='A=`alias` sudo env '           # save current ENV when sudo
 alias watch='watch '
+
+alias -g G='| grep'
 
 #  node.js
 alias npmls="npm list --depth=0 2>/dev/null"
