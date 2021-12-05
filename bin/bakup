@@ -1,0 +1,72 @@
+#!/bin/bash
+
+CONFIG_DIR=$HOME/.config/bakup
+USERNAME=$SUDO_USER
+
+if [[ -z $1 || $1 = "--help" || $1 = "-h" ]]; then
+	echo "bakup  version 2.0"
+	echo "Copyright (C) 2012 by Srigi."
+	echo ""
+	echo "Using rsync backup MacOS X machine (profile, system/tools config) to external drive"
+	echo ""
+	echo "Usage: backup [OPTION]"
+	echo "       backup DEST"
+	echo ""
+	echo "Options:"
+	echo "-h --help  show this help"
+	exit
+fi
+
+if [ `whoami` != 'root' ]; then
+    echo " This script need to be run as root!"
+    exit
+fi
+
+osascript -e 'if application "iTerm" is frontmost then tell application "System Events" to keystroke "k" using command down'
+
+# -a					archive mode, equals -rlptgoD (no -H, -A, -X)
+# -h					output numbers in a human-readable format
+# -r					recurse into directories
+# -l					copy symlinks as symlinks
+# -L					transform symlink into referent file/dir
+# -p					preserve permissions
+# -t					preserve modification times
+# -g					preserve group
+# -o					preserve owner (super-user only)
+# -D					same as --devices --specials
+# --devices				preserve device files (super-user only)
+# --specials			preserve special files
+# --modify-window		compare mod-times with reduced accuracy
+# -H					preserve hard links
+# -A					preserve ACLs (implies -p)
+# -X					preserve extended attributes
+# -z					compress file data during the transfer
+# -n, --dry-run			perform a trial run with no changes made
+# --bwlimit=KBPS		limit I/O bandwidth, KBytes per second
+# --filter "P <exp>"	don't delete <exp> on receiver
+
+echo -e "=== \033[0;33mbackuping \033[1;34m/Users/$USERNAME\033[0m ==============================="
+rsync \
+  -rlptDh \
+  --progress \
+  --stats \
+  --delete \
+  --delete-excluded \
+  --delete-after \
+  --exclude-from="$CONFIG_DIR/~home.cfg" \
+  --modify-window=1 \
+  /$HOME/ \
+  $1/Users.$USERNAME
+
+echo -e "\n=== \033[0;33mbackuping \033[1;34m/\033[0m =========================================="
+rsync \
+  -rpthDL \
+  --progress \
+  --stats \
+  --delete \
+  --delete-excluded \
+  --delete-after \
+  --include-from="$CONFIG_DIR/~root.cfg" \
+  --exclude-from="$CONFIG_DIR/~root.cfg" \
+  / \
+  $1/root
