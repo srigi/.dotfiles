@@ -16,4 +16,5 @@ export HISTSIZE=50000
 export HISTFILESIZE=$(expr $HISTSIZE \* 50)
 export HISTIGNORE="cd:cd -:date:docker exec -ti *:docker rm *:docker rmi *:docker stop *:exit:ls:pwd:s:..:...:* --help"
 export HISTORY_IGNORE="(cd|cd -|date|docker exec -ti *|docker rm *|docker rmi *|docker stop *|exit|ls|pwd|s|..|...|* --help)"
+export HOMEBREW_GITHUB_API_TOKEN=`cat ~/.homebrew-github-api-token`
 export SAVEHIST=$(expr $HISTSIZE \* 50)
