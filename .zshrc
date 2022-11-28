@@ -24,6 +24,11 @@ fi
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 #
+# Load direnv
+#
+eval "$(direnv hook zsh)"
+
+#
 # Load directory jumper Z
 #
 [ -f $(brew --prefix)/etc/profile.d/z.sh ] && source $(brew --prefix)/etc/profile.d/z.sh
@@ -37,6 +42,7 @@ alias cleanup="find $HOME -type f -name '*.DS_Store' -ls -delete"   # recursivel
 alias composer="php -n -dmemory_limit=2560M ~/bin/composer.phar"
 alias dl="cd ~/Downloads"
 alias ls='gls -lAFh --color --group-directories-first'
+alias mc="mc --nosubshell"
 alias md="mkdir -p"
 alias s="subl ."
 #alias sudo='sudo '                          # enable aliases to be sudo’ed
