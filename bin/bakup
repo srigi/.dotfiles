@@ -53,7 +53,7 @@ rsync \
   --delete \
   --delete-excluded \
   --delete-after \
-  --exclude-from="$CONFIG_DIR/~home.cfg" \
+  --exclude-from="$CONFIG_DIR/home.cfg" \
   --modify-window=1 \
   /$HOME/ \
   $1/Users.$USERNAME
@@ -66,7 +66,7 @@ rsync \
   --delete \
   --delete-excluded \
   --delete-after \
-  --include-from="$CONFIG_DIR/~root.cfg" \
-  --exclude-from="$CONFIG_DIR/~root.cfg" \
+  --include-from="$CONFIG_DIR/root.cfg" \
+  --exclude-from="$CONFIG_DIR/root.cfg" \
   / \
   $1/root
