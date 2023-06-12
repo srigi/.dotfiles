@@ -48,7 +48,7 @@ path=(
   $HOME/{,s}bin(N)
   /opt/{homebrew,local}/{,s}bin(N)
   /usr/local/{,s}bin(N)
-  /Applications/Postgres.app/Contents/Versions/14/bin
+  /Applications/Postgres.app/Contents/Versions/15/bin
   $HOME/.cargo/bin
   $path
 )
