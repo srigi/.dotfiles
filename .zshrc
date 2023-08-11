@@ -56,7 +56,7 @@ alias npmls="npm list --depth=0 2>/dev/null"
 alias npmo="npm outdated --depth 0"
 alias yarno="yarn outdated"
 
-#  Docker
+# Docker
 alias de="docker exec -ti"
 alias di="docker images | sort"
 alias dlogs="docker logs -f"
@@ -69,15 +69,15 @@ alias dv="docker volume"
 alias dvls="docker volume ls"
 alias dvrm="docker volume rm"
 
-#  docker-compose
-alias dc="docker-compose"
-alias dcb="docker-compose build"
-alias dcd="docker-compose down"
-alias dce="docker-compose exec"
-alias dcps="docker-compose ps"
-alias dcr="docker-compose run --rm"
-alias dcu="docker-compose up"
-alias dcub="docker-compose up --build"
+# docker-compose
+alias dc="docker compose"
+alias dcb="docker compose build"
+alias dcd="docker compose down"
+alias dce="docker compose exec"
+alias dcps="docker compose ps"
+alias dcr="docker compose run --rm"
+alias dcu="docker compose up"
+alias dcub="docker compose up --build"
 
 # Kubernetes
 alias k=kubectl
