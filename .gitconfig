@@ -17,7 +17,7 @@
 	# diff
 	d = diff
 	dc = diff --cached
-	last = diff HEAD^
+	last = diff HEAD^ --ext-diff
 
 	# log
 	changelog = log --pretty=format:' * %s'
@@ -77,18 +77,17 @@
 	helper = osxkeychain
 
 [diff]
-	# Git diff will use (i)ndex, (w)ork tree, (c)ommit and (o)bject
-	# instead of a/b/c/d as prefixes for patches
-	mnemonicprefix = true
+	algorithm = histogram
 	compactionHeuristic = on
-	indentHeuristic = on
 	external = difft
-
-[http]
-	cookiefile = /Users/srigi/.gitcookies
+	indentHeuristic = on
+	mnemonicprefix = true # use (i)ndex, (w)ork tree, (c)ommit and (o)bject as prefixes for patches
 
 [init]
 	defaultBranch = main
+
+[merge]
+	conflictstyle = zdiff3
 
 [mergetool]
 	keepBackup = true
@@ -104,5 +103,5 @@
 	email = srigi@srigi.dev
 	name = Srigi
 
-[includeIf "gitdir:~/Projects/@wrk/StubbenEdge/**"]
-	path="~/Projects/@wrk/StubbenEdge/.gitconfig.stubbenedge"
+[includeIf "gitdir:~/Developer/wrk/Caffeina/**"]
+	path="~/Developer/wrk/Caffeina/.gitconfig"
