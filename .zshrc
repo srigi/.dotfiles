@@ -2,45 +2,44 @@
 # Executes commands at the start of an interactive session.
 #
 
-#
-# Load Powerlevel10k prompt cache
-#
+# Enable Powerlevel10k "Instant prompt" functionality.
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-
-#
-# Source Prezto
-#
+# Source Prezto.
 if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
 
-#
-# Load Powerlevel10k prompt
-#  run `p10k configure` or edit ~/.p10k.zsh to customize
-#
+# Source Powerlevel10k prompt. Run `p10k configure` to customize.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-#
-# Load direnv
-#
+# Load direnv.
 eval "$(direnv hook zsh)"
 
-#
-# Load directory jumper Z
-#
+# Source directory jumper Z.
 [ -f $(brew --prefix)/etc/profile.d/z.sh ] && source $(brew --prefix)/etc/profile.d/z.sh
 
 
-# Customize to your needs...
+# ENVs
+#
+export HISTSIZE=2000
+export HISTCONTROL=ignoredups
+export HISTDUP=erase
+export HISTFILESIZE=$(expr $HISTSIZE \* 50)
+export HISTIGNORE='cd:cd -:date:exit:s'
+export HISTORY_IGNORE='(cd|cd -|date|exit|s)'
+export HOMEBREW_GITHUB_API_TOKEN=`cat ~/.homebrew-github-api-token`
+export LESS_TERMCAP_md=$(tput setaf 141) # highlight titles in man
+export SAVEHIST=$(expr $HISTSIZE \* 50)
 
-# Aliases:
-
+# Aliases
+#
 alias cleanup="find $HOME -type f -name '*.DS_Store' -ls -delete"   # recursively delete `.DS_Store` files from $HOME
 alias composer="php -n -dmemory_limit=2560M ~/bin/composer.phar"
 alias dl="cd ~/Downloads"
+alias -g G='| grep'
 alias ls='gls -lAFh --color --group-directories-first'
 alias mc="mc --nosubshell"
 alias md="mkdir -p"
@@ -49,14 +48,25 @@ alias s="subl ."
 #alias sudo='A=`alias` sudo env '           # save current ENV when sudo
 alias watch='watch '
 
-alias -g G='| grep'
+# networking aliases
+alias flush="sudo dscacheutil -flushcache && sudo killall -HUP mDNSResponder"
+alias httpdump="sudo tcpdump -i lo0 -n -s 0 -w - | grep -a -o -E \"Host\: .*|GET \/.*\""
+alias lsports='lsof -Pn -i4 -i6 | grep LISTEN'
+alias lsportss='netstat -an | grep LISTEN'
+alias sniff="sudo ngrep -d 'lo0' -t '^(DELETE|GET|OPTIONS|POST|PUT) ' 'tcp and port 80'"
 
-#  node.js
+# node.js
 alias npmls="npm list --depth=0 2>/dev/null"
 alias npmo="npm outdated --depth 0"
 alias yarno="yarn outdated"
+alias pa="pnpm add"
+alias pad="pnpm add -D"
+alias pi="pnpm i"
+alias pls="pnpm ls --depth 1"
+alias po="pnpm outdated"
+alias p="pnpm"
 
-# Docker
+# docker
 alias de="docker exec -ti"
 alias di="docker images | sort"
 alias dlogs="docker logs -f"
@@ -69,7 +79,7 @@ alias dv="docker volume"
 alias dvls="docker volume ls"
 alias dvrm="docker volume rm"
 
-# docker-compose
+# docker compose
 alias dc="docker compose"
 alias dcb="docker compose build"
 alias dcd="docker compose down"
@@ -79,7 +89,7 @@ alias dcr="docker compose run --rm"
 alias dcu="docker compose up"
 alias dcub="docker compose up --build"
 
-# Kubernetes
+# kubernetes
 alias k=kubectl
 alias ka="k apply -f"
 alias kak="k apply -k"
@@ -122,12 +132,45 @@ alias kdpv="kd persistentvolume"
 alias kdpvc="kd persistentvolumeclaim"
 alias kds="kd service"
 
-#  networking
-alias flush="sudo dscacheutil -flushcache && sudo killall -HUP mDNSResponder"
-alias httpdump="sudo tcpdump -i lo0 -n -s 0 -w - | grep -a -o -E \"Host\: .*|GET \/.*\""
-alias lsports='lsof -Pn -i4 -i6 | grep LISTEN'
-alias lsportss='netstat -an | grep LISTEN'
-alias sniff="sudo ngrep -d 'lo0' -t '^(DELETE|GET|OPTIONS|POST|PUT) ' 'tcp and port 80'"
-
-#  terraform
+# terraform
 alias tf=terraform
+
+
+# Shell functions
+#
+
+# `cd` into folder displayed in Path Finder
+function cdf() {
+	target=`osascript -e 'tell application "Path Finder" to if (count of Finder windows) > 0 then get POSIX path of the target of the front finder window'`
+	if [ "$target" != "" ]; then
+		cd "$target"; pwd
+	else
+		echo 'No Path Finder window found' >&2
+	fi
+}
+
+# generate random string with given length (default 16chars)
+function randstr() {
+  cat /dev/random | gtr -dc 'a-zA-Z0-9!@#$%^&*()-_=+[{}];:\|`~,<>./?' | fold -w ${1:-16} | head -n 1
+}
+
+# list current dir via tree. Provide `depth` as argument (default 1)
+function t() {
+  ignore='"node_modules|.git"'
+  cmd="tree -a -C --dirsfirst -I $ignore"
+
+  if [[ $1 -eq 0 ]]; then
+    cmd="$cmd -L 1"
+  fi
+
+  if [[ $1 =~ '^[0-9]+$' ]]; then
+    cmd="$cmd -L"
+  fi
+
+  eval $cmd $@
+}
+
+# create dir and `cd` into it
+function take() {
+  mkdir -p $@ && cd ${@:$#}
+}
