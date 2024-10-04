@@ -30,6 +30,12 @@ export HISTDUP=erase
 export HISTFILESIZE=$(expr $HISTSIZE \* 80)
 export HISTIGNORE='cd:cd -:date:exit:s'
 export HISTTIMEFORMAT='%F %T'
+setopt hist_find_no_dups
+setopt hist_ignore_all_dups
+setopt hist_ignore_dups
+setopt hist_ignore_space
+setopt hist_save_no_dups
+
 export HOMEBREW_GITHUB_API_TOKEN=`cat ~/.homebrew-github-api-token`
 export LESS_TERMCAP_md=$(tput setaf 141) # highlight titles in man
 
@@ -66,7 +72,7 @@ function take() {
 
 # Aliases
 #
-alias cleanup="find $HOME -type f -name '*.DS_Store' -ls -delete"   # recursively delete `.DS_Store` files from $HOME
+alias cleanup="find $HOME -type f -name '.DS_Store' -ls -delete"   # recursively delete `.DS_Store` files from $HOME
 alias composer="php -n -dmemory_limit=2560M ~/bin/composer.phar"
 alias dl="cd ~/Downloads"
 alias -g G='| grep'
