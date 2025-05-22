@@ -86,8 +86,8 @@
 [init]
 	defaultBranch = main
 
-[merge]
-	conflictstyle = zdiff3
+#[merge]
+#	conflictstyle = zdiff3
 
 [mergetool]
 	keepBackup = true
@@ -100,7 +100,7 @@
 	enabled = true
 
 [user]
-	email = srigi@srigi.dev
+	email = 295197+srigi@users.noreply.github.com
 	name = Srigi
 
 [includeIf "gitdir:~/Developer/wrk/Caffeina/**"]

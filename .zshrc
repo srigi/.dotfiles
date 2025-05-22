@@ -36,6 +36,7 @@ setopt hist_ignore_dups
 setopt hist_ignore_space
 setopt hist_save_no_dups
 
+export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_GITHUB_API_TOKEN=`cat ~/.homebrew-github-api-token`
 export LESS_TERMCAP_md=$(tput setaf 141) # highlight titles in man
 
@@ -94,13 +95,12 @@ alias sniff="sudo ngrep -d 'lo0' -t '^(DELETE|GET|OPTIONS|POST|PUT) ' 'tcp and p
 # node.js
 alias npmls="npm list --depth=0 2>/dev/null"
 alias npmo="npm outdated --depth 0"
-alias yarno="yarn outdated"
+alias p="pnpm"
 alias pa="pnpm add"
 alias pad="pnpm add -D"
 alias pi="pnpm i"
 alias pls="pnpm ls --depth 1"
 alias po="pnpm outdated"
-alias p="pnpm"
 
 # docker
 alias de="docker exec -ti"
