@@ -12,6 +12,9 @@ if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
 
+# Load VSCode shell integration.
+[[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code -- --locate-shell-integration-path zsh)"
+
 # Source Powerlevel10k prompt. Run `p10k configure` to customize.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
