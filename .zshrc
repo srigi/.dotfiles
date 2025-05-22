@@ -74,7 +74,7 @@ function take() {
 # Aliases
 #
 alias cleanup="find $HOME -type f -name '.DS_Store' -ls -delete"   # recursively delete `.DS_Store` files from $HOME
-alias composer="php -n -dmemory_limit=2560M ~/bin/composer.phar"
+alias composer="php -n -dmemory_limit=1280M ~/bin/composer.phar"
 alias dl="cd ~/Downloads"
 alias -g G='| grep'
 alias ls='gls -lAFh --color --group-directories-first'

@@ -46,11 +46,11 @@ typeset -gU cdpath fpath mailpath path
 
 # Set the list of directories that Zsh searches for programs.
 path=(
-  $HOME/bin
-  $HOME/Library/Application Support/JetBrains/Toolbox/scripts
-  /opt/{homebrew,local}/{,s}bin(N)
-  /usr/local/{,s}bin(N)
   /Applications/Postgres.app/Contents/Versions/latest/bin
+  $HOME/.local/bin
+  $HOME/.phpenv/bin
+  $HOME/.phpenv/shims
+  $HOME/bin
   $path
 )
 
