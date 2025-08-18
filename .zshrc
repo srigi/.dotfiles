@@ -1,13 +1,13 @@
 #
-# Executes commands at the start of an interactive session.
+# Execute commands at the start of an interactive session
 #
 
-# Enable Powerlevel10k "Instant prompt" functionality.
+# enable Powerlevel10k's "instant prompt"
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# Source Prezto.
+# load Prezto
 if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
@@ -15,33 +15,22 @@ fi
 # load VSCode shell integration
 [[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"
 
-# Source Powerlevel10k prompt. Run `p10k configure` to customize.
+# load Powerlevel10k prompt (run `p10k configure` to customize)
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# Load direnv.
+# load direnv
 eval "$(direnv hook zsh)"
 
-# Source directory jumper Z.
-[[ -s "$(brew --prefix)/etc/profile.d/z.sh" ]] && source $(brew --prefix)/etc/profile.d/z.sh
+# load directory jumper Z
+[[ -f "$(brew --prefix)/etc/profile.d/z.sh" ]] && source $(brew --prefix)/etc/profile.d/z.sh
 
-
-# ENVs
-#
-export HISTSIZE=5000
-export HISTCONTROL=ignoredups,erasedups
-export HISTDUP=erase
-export HISTFILESIZE=$(expr $HISTSIZE \* 80)
-export HISTIGNORE='cd:cd -:date:exit:s'
-export HISTTIMEFORMAT='%F %T'
+# (re)configure ZSH's history
+export HISTSIZE=10000
 setopt hist_find_no_dups
 setopt hist_ignore_all_dups
 setopt hist_ignore_dups
 setopt hist_ignore_space
 setopt hist_save_no_dups
-
-export HOMEBREW_NO_ANALYTICS=1
-export HOMEBREW_GITHUB_API_TOKEN=`cat ~/.homebrew-github-api-token`
-export LESS_TERMCAP_md=$(tput setaf 141) # highlight titles in man
 
 
 # Shell functions

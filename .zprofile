@@ -1,19 +1,15 @@
 #
-# Executes commands at login pre-zshrc.
+# Execute commands at login, before .zshrc
 #
 
-#
 # Browser
 #
-
 if [[ -z "$BROWSER" && "$OSTYPE" == darwin* ]]; then
   export BROWSER='open'
 fi
 
-#
 # Editors
 #
-
 if [[ -z "$EDITOR" ]]; then
   export EDITOR='vim'
 fi
@@ -24,49 +20,36 @@ if [[ -z "$PAGER" ]]; then
   export PAGER='less'
 fi
 
-#
 # Language
 #
-
 if [[ -z "$LANG" ]]; then
   export LANG='en_US.UTF-8'
 fi
 
-#
 # Paths
 #
-
-# Ensure path arrays do not contain duplicates.
-typeset -gU cdpath fpath mailpath path
-
-# Set the list of directories that cd searches.
+typeset -gU cdpath fpath mailpath path # ensure path doesn't contain duplicates
 # cdpath=(
+#   the list of directories that `cd` searches
 #   $cdpath
 # )
-
-# Set the list of directories that Zsh searches for programs.
 path=(
   /Applications/Postgres.app/Contents/Versions/latest/bin
-  $HOME/.local/bin
+  /Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin
   $HOME/.phpenv/bin
   $HOME/.phpenv/shims
   $HOME/bin
   $path
 )
 
-#
 # Less
 #
-
-# Set the default Less options.
-# Mouse-wheel scrolling has been disabled by -X (disable screen clearing).
-# Remove -X to enable it.
 if [[ -z "$LESS" ]]; then
-  export LESS='-g -i -M -R -S -w -X -z-4'
+  export LESS='-g -i -M -R -S -w -X -z-4' # Mouse-wheel scrolling disabled by -X (disable screen clearing)
 fi
 
-# Set the Less input preprocessor.
-# Try both `lesspipe` and `lesspipe.sh` as either might exist on a system.
 if [[ -z "$LESSOPEN" ]] && (( $#commands[(i)lesspipe(|.sh)] )); then
+  # less input preprocessor
+  #  try both `lesspipe` and `lesspipe.sh` as either might exist on a system
   export LESSOPEN="| /usr/bin/env $commands[(i)lesspipe(|.sh)] %s 2>&-"
 fi
