@@ -44,7 +44,7 @@ function randstr() {
 # list current dir via tree. Provide `depth` as argument (default 1)
 function t() {
   ignore='"node_modules|.git"'
-  cmd="tree -a -C --dirsfirst -I $ignore"
+  cmd="tree -a -l -C --dirsfirst -I $ignore"
 
   if [[ $1 -eq 0 ]]; then
     cmd="$cmd -L 1"
