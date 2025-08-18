@@ -85,14 +85,22 @@ alias lsportss='netstat -an | grep LISTEN'
 alias sniff="sudo ngrep -d 'lo0' -t '^(DELETE|GET|OPTIONS|POST|PUT) ' 'tcp and port 80'"
 
 # node.js
-alias npmls="npm list --depth=0 2>/dev/null"
-alias npmo="npm outdated --depth 0"
+alias nls="npm list --depth=1 2>/dev/null"
+alias no="npm outdated --depth 0"
 alias p="pnpm"
 alias pa="pnpm add"
 alias pad="pnpm add -D"
-alias pi="pnpm i"
-alias pls="pnpm ls --depth 1"
+alias pi="pnpm install"
+alias pls="pnpm ls --depth 1 2>/dev/null"
 alias po="pnpm outdated"
+
+# composer
+alias c="composer"
+alias ci="composer install"
+alias cr="composer require"
+alias crd="composer require --dev"
+alias cda="composer dump-autoload --optimize"
+alias csu="composer self-update"
 
 # docker
 alias de="docker exec -ti"
