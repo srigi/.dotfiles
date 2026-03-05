@@ -1,0 +1,140 @@
+#!/bin/bash
+set -e
+
+# Configuration
+MAX_BACKUPS=35
+
+usage() {
+    echo "Usage: $(basename "$0") --host <host> --user <user> --src <path> [--src <path> ...] <local_dest>"
+    echo ""
+    echo "Backs up remote paths via SSH, compressing them on the local machine,"
+    echo "and maintains a rolling history of $MAX_BACKUPS backups."
+    echo ""
+    echo "Arguments:"
+    echo "  --host <host>    SSH hostname or IP (e.g., ecs-liva)"
+    echo "  --user <user>    SSH username (e.g., openclaw)"
+    echo "  --src <path>     Remote path to backup. Can be specified multiple times."
+    echo "  <local_dest>     Local destination directory (e.g., ~/.openclaw/backups)"
+    echo ""
+    echo "Example:"
+    echo "  $(basename "$0") --host ecs-liva --user openclaw --src /home/openclaw/.openclaw --src /home/openclaw/config/systemd ~/.openclaw/backups"
+    echo ""
+    exit 1
+}
+
+# Parse arguments
+HOST=""
+USER=""
+REMOTE_SRCS=()
+LOCAL_DEST=""
+
+while [[ $# -gt 0 ]]; do
+    key="$1"
+    case $key in
+        --host)
+            HOST="$2"
+            shift 2
+            ;;
+        --user)
+            USER="$2"
+            shift 2
+            ;;
+        --src)
+            REMOTE_SRCS+=("$2")
+            shift 2
+            ;;
+        -h|--help)
+            usage
+            ;;
+        *)
+            if [ -z "$LOCAL_DEST" ]; then
+                LOCAL_DEST="$1"
+            else
+                echo "Error: Unknown argument '$1'"
+                usage
+            fi
+            shift
+            ;;
+    esac
+done
+
+# Validation
+if [ -z "$HOST" ] || [ -z "$USER" ] || [ ${#REMOTE_SRCS[@]} -eq 0 ] || [ -z "$LOCAL_DEST" ]; then
+    echo "Error: Missing required arguments."
+    usage
+fi
+
+# Find common prefix to use as base directory for tar -C
+find_common_prefix() {
+    [ $# -eq 0 ] && return
+    local prefix="$1"
+    if [ $# -eq 1 ]; then
+        echo "$(dirname "$1")"
+        return
+    fi
+
+    for path in "$@"; do
+        while [[ "$path" != "$prefix"* ]]; do
+            prefix="${prefix%/*}"
+            [ -z "$prefix" ] && break
+        done
+    done
+
+    [ -z "$prefix" ] && prefix="/"
+    echo "$prefix"
+}
+
+# Safely quote arguments for remote shell
+quote_args() {
+    local arg
+    for arg in "$@"; do
+        printf " '%s'" "${arg//\'/\'\\\'\'}"
+    done
+}
+
+BASE_DIR=$(find_common_prefix "${REMOTE_SRCS[@]}")
+[ -z "$BASE_DIR" ] && BASE_DIR="/"
+
+RELATIVE_SRCS=()
+for src in "${REMOTE_SRCS[@]}"; do
+    rel_src="${src#$BASE_DIR}"
+    rel_src="${rel_src#/}" # Remove leading slash
+    [ -z "$rel_src" ] && rel_src="."
+    RELATIVE_SRCS+=("$rel_src")
+done
+
+# Prepare
+DATE=$(date +%Y-%m-%d@%H-%M)
+FILENAME="${DATE}.tar.bz2"
+FULL_DEST_PATH="${LOCAL_DEST}/${FILENAME}"
+
+# Ensure local dir exists
+mkdir -p "$LOCAL_DEST"
+
+echo "[*] Connecting to $USER@$HOST..."
+echo "[*] Backing up ${#REMOTE_SRCS[@]} source(s) from '$BASE_DIR' to '$FULL_DEST_PATH'..."
+
+# Execution
+# 1. SSH connects
+# 2. Remote tar streams multiple files/dirs to stdout
+# 3. Local bzip2 compresses stream to file
+QUOTED_REL_SRCS=$(quote_args "${RELATIVE_SRCS[@]}")
+REMOTE_CMD="tar -cf - -C $(quote_args "$BASE_DIR") $QUOTED_REL_SRCS"
+
+ssh -q -o BatchMode=yes "$USER@$HOST" "$REMOTE_CMD" | bzip2 > "$FULL_DEST_PATH"
+echo "[+] Backup created successfully: $FILENAME"
+
+# Rotation
+echo "[*] checking for old backups (keeping last $MAX_BACKUPS)..."
+BACKUP_COUNT=$(ls -1 "$LOCAL_DEST"/*.tar.bz2 2>/dev/null | wc -l | xargs)
+
+if [ "$BACKUP_COUNT" -gt "$MAX_BACKUPS" ]; then
+    REMOVE_COUNT=$((BACKUP_COUNT - MAX_BACKUPS))
+    echo "[*] Removing $REMOVE_COUNT old backup(s)..."
+    ls -1t "$LOCAL_DEST"/*.tar.bz2 | tail -n "$REMOVE_COUNT" | xargs rm
+    echo "[+] Cleanup complete."
+else
+    echo "[*] No cleanup needed ($BACKUP_COUNT/$MAX_BACKUPS)."
+fi
+
+echo "[=] Done."
